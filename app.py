@@ -5,26 +5,44 @@ import os
 # --- Page Config ---
 st.set_page_config(page_title="Myanmar AI Astrology", page_icon="🔮", layout="centered")
 
-# --- Custom CSS (Dark & Gold Theme) ---
+# --- Custom CSS (Dark Mode, Gold Theme & Animated Background) ---
 st.markdown("""
     <style>
-    .stApp { background-color: #0E1117; color: #E0E0E0; }
+    /* Background Animation */
+    .stApp {
+        background: radial-gradient(ellipse at bottom, #1B2735 0%, #090A0F 100%);
+        color: #E0E0E0;
+    }
+    
+    /* စာပိုဒ်ကျဲနေတာကို ပြင်ရန် */
+    .result-card {
+        background-color: rgba(26, 28, 35, 0.8); 
+        padding: 20px; 
+        border-radius: 15px;
+        border: 1px solid #D4AF37; 
+        color: #E0E0E0; 
+        line-height: 1.5; /* စာကြောင်းအကွာအဝေးကို လျှော့ချထားသည် */
+        margin-top: 10px;
+        white-space: pre-wrap;
+    }
+    
+    /* Paragraph spacing ပြင်ဆင်ခြင်း */
+    .result-card p {
+        margin-bottom: 8px !important;
+    }
+
     h1, h2, h3 { color: #D4AF37 !important; text-align: center; }
+
     .stButton>button {
         width: 100%; border-radius: 25px; height: 3em;
         background-color: #D4AF37; color: black; font-weight: bold; border: none;
     }
-    .stButton>button:hover { background-color: #FFD700; color: black; }
-    .result-card {
-        background-color: #1A1C23; padding: 25px; border-radius: 15px;
-        border: 1px solid #D4AF37; color: #E0E0E0; line-height: 1.8;
-        margin-top: 20px; box-shadow: 0 4px 15px rgba(212, 175, 55, 0.1);
-        white-space: pre-wrap;
-    }
+    
+    /* Tab Styling */
     .stTabs [data-baseweb="tab-list"] { gap: 8px; }
     .stTabs [data-baseweb="tab"] {
-        height: 50px; background-color: #1A1C23; border-radius: 10px 10px 0 0;
-        color: white; padding: 0 15px; font-size: 14px;
+        height: 45px; background-color: #1A1C23; border-radius: 10px 10px 0 0;
+        color: white; font-size: 14px;
     }
     .stTabs [aria-selected="true"] { background-color: #D4AF37 !important; color: black !important; }
     </style>
@@ -36,41 +54,42 @@ if api_key:
     genai.configure(api_key=api_key)
     model = genai.GenerativeModel('models/gemini-2.5-flash')
 else:
-    st.error("API Key မတွေ့ပါ။ Secrets မှာ GEMINI_API_KEY ထည့်ပေးပါ။")
+    st.error("API Key မတွေ့ပါ။ Settings ထဲမှာ GEMINI_API_KEY ထည့်ပေးပါ။")
 
 st.markdown("<h1>🔮 မြန်မာ့ဗေဒင်နှင့် ဓာတ်ရိုက်ဓာတ်ဆင် AI</h1>", unsafe_allow_html=True)
 
-# --- Tabs for Features ---
-tab1, tab2, tab3 = st.tabs(["🌙 အိပ်မက်", "✨ ဟောစာတမ်း", "🛡️ ဓာတ်ရိုက်ဓာတ်ဆင်"])
+# --- AI Personality & Grammar Logic ---
+# နာမည်ရှေ့မှာ ခင်ဗျာ မပါစေရန်နှင့် စာကြောင်းအကွာအဝေး ကျစ်လျစ်စေရန် ညွှန်ကြားချက်
+system_instruction = """
+မင်းက မြန်မာ့ရိုးရာ ဗေဒင်ပညာရှင် ယောကျ်ားလေးတစ်ယောက်ပါ။ 
+စကားပြောရင် 'ကျွန်တော်' နဲ့ 'ခင်ဗျာ' ကို သုံးရပါမယ်။ 
+အရေးကြီးသောအချက် - တစ်ဖက်လူကို နှုတ်ဆက်တဲ့အခါ 'မင်္ဂလာပါ [နာမည်] ခင်ဗျာ' လို့ပဲ သုံးပါ။ 'မင်္ဂလာပါ ခင်ဗျာ [နာမည်]' လို့ မပြောပါနဲ့။
+အဖြေတွေကို ရေးတဲ့အခါ စာကြောင်းတွေကြားမှာ space အလွတ်တွေ အများကြီး မခြားပါနဲ့။ ကျစ်ကျစ်လျစ်လျစ်နဲ့ ဖတ်ရလွယ်အောင် ရေးပေးပါ။
+"""
 
-# --- AI Personality Setup ---
-# AI ကို ယောကျ်ားလေး လေသံ (ခင်ဗျာ/ကျွန်တော်) သုံးရန် ညွှန်ကြားထားသည်
-system_instruction = "မင်းက မြန်မာ့ရိုးရာ ဗေဒင်ပညာရှင် ယောကျ်ားလေးတစ်ယောက်ပါ။ စကားပြောရင် 'ခင်ဗျာ' နဲ့ 'ကျွန်တော်' ကိုပဲ သုံးရပါမယ်။"
+tab1, tab2, tab3 = st.tabs(["🌙 အိပ်မက်", "✨ ဟောစာတမ်း", "🛡️ ယတြာ"])
 
-# --- Tab 1: Dream Interpreter ---
+# --- Tab 1: Dream ---
 with tab1:
-    st.markdown("### 🌙 အိပ်မက်နိမိတ်ဖတ်ခြင်း")
     user_dream = st.text_area("သင်မက်ခဲ့သည့် အိပ်မက်ကို ရေးပါ...", height=100)
     if st.button("နိမိတ်ဖတ်မယ်"):
         if user_dream:
             with st.spinner('ကျွန်တော် တွက်ချက်ပေးနေပါတယ် ခင်ဗျာ...'):
-                prompt = f"{system_instruction} '{user_dream}' ဆိုတဲ့ အိပ်မက်ကို မြန်မာလို နိမိတ်ဖတ်ပေးပါ။ ကောင်းဆိုးနိမိတ်နဲ့ အကျိုးပေးဂဏန်းကို ယောကျ်ားလေးတစ်ယောက် လေသံနဲ့ သေချာရှင်းပြပေးပါ ခင်ဗျာ။"
+                prompt = f"{system_instruction} အိပ်မက်: '{user_dream}' ကို နိမိတ်ဖတ်ပေးပါ။"
                 response = model.generate_content(prompt)
                 st.markdown(f"<div class='result-card'>{response.text}</div>", unsafe_allow_html=True)
 
 # --- Tab 2: Daily Horoscope ---
 with tab2:
-    st.markdown("### ✨ နေ့စဉ်ဟောစာတမ်း")
     day = st.selectbox("သင့်မွေးနေ့ (နေ့နံ) ရွေးပါ", ["တနင်္ဂနွေ", "တနင်္လာ", "အင်္ဂါ", "ဗုဒ္ဓဟူး", "ရာဟု", "ကြာသပတေး", "သောကြာ", "စနေ"])
     if st.button("ဟောစာတမ်းကြည့်မယ်"):
         with st.spinner('နက္ခတ်ကို ကြည့်ပေးနေပါတယ် ခင်ဗျာ...'):
-            prompt = f"{system_instruction} {day} သားသမီးတွေအတွက် ဒီနေ့အတွက် ကံကြမ္မာကို အချစ်ရေး၊ စီးပွားရေး၊ ကျန်းမာရေး ခွဲပြီး ဟောပေးပါ။ ယောကျ်ားလေး လေသံနဲ့ 'ခင်ဗျာ' သုံးပြီး ဟောပေးပါ ခင်ဗျာ။"
+            prompt = f"{system_instruction} {day} သားသမီးတွေအတွက် ဒီနေ့အတွက် ဟောစာတမ်းကို ရှင်းပြပေးပါ။"
             response = model.generate_content(prompt)
             st.markdown(f"<div class='result-card'>{response.text}</div>", unsafe_allow_html=True)
 
-# --- Tab 3: Yadaya (ဓာတ်ရိုက်ဓာတ်ဆင်) ---
+# --- Tab 3: Yadaya ---
 with tab3:
-    st.markdown("### 🛡️ အမည်နှင့် ဓာတ်ရိုက်ဓာတ်ဆင်")
     col1, col2 = st.columns(2)
     with col1:
         user_name = st.text_input("သင့်အမည်")
@@ -79,12 +98,13 @@ with tab3:
     
     if st.button("ယတြာတောင်းမယ်"):
         if user_name:
-            with st.spinner('သင့်အတွက် ယတြာတွက်ချက်ပေးနေပါတယ် ခင်ဗျာ...'):
-                prompt = f"{system_instruction} အမည် {user_name} က {problem} အတွက် မြန်မာ့ရိုးရာ ဓာတ်ရိုက်ဓာတ်ဆင် (ယတြာ) ကို အကြံပေးရမှာပါ။ အမည်ရဲ့ ရှေ့ဆုံးစာလုံး (နံ) ကို ကြည့်ပြီး လိုအပ်တဲ့ ယတြာ ဒါမှမဟုတ် အဆောင်အယောင်ကို ယောကျ်ားလေး လေသံနဲ့ သေသေချာချာ အကြံပေးပါ ခင်ဗျာ။"
+            with st.spinner('ယတြာတွက်ချက်ပေးနေပါတယ် ခင်ဗျာ...'):
+                # နာမည်နဲ့ နှုတ်ဆက်ပုံကို Prompt မှာ အသေသတ်မှတ်ပေးလိုက်ခြင်း
+                prompt = f"{system_instruction} အမည် {user_name} က {problem} ဖြစ်နေတာအတွက် ယတြာပေးပါ။ အစမှာ 'မင်္ဂလာပါ {user_name} ခင်ဗျာ' လို့ပဲ နှုတ်ဆက်ပါ။"
                 response = model.generate_content(prompt)
                 st.markdown(f"<div class='result-card'>{response.text}</div>", unsafe_allow_html=True)
         else:
-            st.warning("အမည် အရင်ထည့်ပေးပါ ခင်ဗျာ။")
+            st.warning("အမည် ထည့်ပေးပါ ခင်ဗျာ။")
 
 st.divider()
-st.caption("Developed with ❤️ by Mg Kyal Ngar | Astrology AI (Male Version)")
+st.caption("Developed with ❤️ by Mg Kyal Ngar | Astrology AI")
