@@ -201,32 +201,36 @@ with tab3:
             st.warning("အမည် ထည့်ပေးပါ ခင်ဗျာ။")
 
 # --- Viewer Counter & Facebook Share Section ---
+# --- Footer Section (Revised Version) ---
 st.divider()
 
-# Link အသစ် (https://myanmar-ai-astrology-by-kyalngar.streamlit.app/) ကို အခြေခံထားပါသည်
-app_url_final = "https://myanmar-ai-astrology-by-kyalngar.streamlit.app/"
+# Link အမှန်ကို သတ်မှတ်ခြင်း
+app_url_official = "https://myanmar-ai-astrology-by-kyalngar.streamlit.app"
 
-# Hits Badge Source (URL ကို သေချာ encode လုပ်ထားပါသည်)
-hits_link = "https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fmyanmar-ai-astrology-by-kyalngar.streamlit.app%2F&count_bg=%23D4AF37&title_bg=%23555555&icon=&icon_color=%23E7E7E7&title=Visitors&edge_flat=false"
-
-st.markdown(f"""
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px;">
-        <div style="color: #D4AF37; font-size: 0.85rem; font-weight: bold;">
-            Developed with ❤️ by Mg Kyal Ngar | Astrology AI v3.0
-        </div>
-        <div>
-            <img src="{hits_link}" alt="Visitor Counter"/>
-        </div>
+# အခြား Counter တစ်ခု (VisitorBadge.io) ကို ပြောင်းသုံးကြည့်ပါမည်
+# ဒါက hits ထက်စာရင် broken link ဖြစ်နိုင်ခြေ ပိုနည်းပါသည်
+counter_html_new = f"""
+<div style="display: flex; justify-content: space-between; align-items: center; margin-top: 15px;">
+    <div style="color: #D4AF37; font-size: 0.9rem; font-weight: bold;">
+        Developed with ❤️ by Mg Kyal Ngar | Astrology AI v3.5
     </div>
-""", unsafe_allow_html=True)
+    <div>
+        <a href="https://visitorbadge.io/status?path={app_url_official}">
+            <img src="https://api.visitorbadge.io/api/combined?path={app_url_official}&label=VISITORS&countColor=%23d4af37&style=flat" alt="Visitor Counter"/>
+        </a>
+    </div>
+</div>
+"""
+st.markdown(counter_html_new, unsafe_allow_html=True)
 
 # Facebook Share Button
 st.markdown(f"""
     <div style="text-align: center; margin-top: 25px;">
-        <a href="https://www.facebook.com/sharer/sharer.php?u={app_url_final}" target="_blank" style="text-decoration: none;">
-            <div style="background-color: #1877F2; color: white; padding: 10px 25px; border-radius: 25px; font-weight: bold; display: inline-block; cursor: pointer;">
+        <a href="https://www.facebook.com/sharer/sharer.php?u={app_url_official}" target="_blank" style="text-decoration: none;">
+            <div style="background-color: #1877F2; color: white; padding: 10px 25px; border-radius: 25px; font-weight: bold; display: inline-block;">
                 🔵 Facebook မှာ Share မယ်
             </div>
         </a>
     </div>
 """, unsafe_allow_html=True)
+
