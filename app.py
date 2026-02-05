@@ -205,11 +205,11 @@ st.divider()
 
 # Error မတက်အောင် Variable ကို အရင်ဆုံး သတ်မှတ်ပါသည်
 # သင့် App Link ထဲမှာ m နှစ်လုံး ဖြစ်နေတဲ့အတွက် အဲဒီအတိုင်းပဲ ထည့်ပေးထားပါတယ်
-app_url = "https://myammar-ai-astrology-by-kyalngar.streamlit.app"
+app_url = "https://myanmar-ai-astrology-by-kyalngar.streamlit.app"
 
 # 1. Viewer Counter (Hits.seeyoufarm)
 # URL ကို Server နားလည်အောင် %Encoding လုပ်ထားရပါသည်
-encoded_url = "https%3A%2F%2Fmyammar-ai-astrology-by-kyalngar.streamlit.app"
+encoded_url = "https%3A%2F%2Fmyanmar-ai-astrology-by-kyalngar.streamlit.app"
 counter_html = f"""
 <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 20px;">
     <div style="color: #D4AF37; font-size: 0.85rem; font-weight: bold;">
