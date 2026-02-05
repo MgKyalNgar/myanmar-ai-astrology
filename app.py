@@ -147,7 +147,8 @@ def get_ai_response(prompt, spinner_text):
         loading_placeholder.empty()
         if "429" in str(e):
             st.error("Gemini Free Limit ပြည့်သွားပါပြီ။ ခဏနားပြီးမှ ပြန်စမ်းပေးပါ")
-        else: st.error(f"Error တက်သွားပါတယ်: {str(e)}")
+        else: 
+			st.error(f"Error တက်သွားပါတယ်: {str(e)}")
         return None
 
 
@@ -162,8 +163,8 @@ with tab1:
             if res_text:    
                 st.markdown(f"<div class='result-card'>{res_text}</div>", unsafe_allow_html=True)
                 st.download_button("📂 ရလဒ်ကိုသိမ်းမယ်", res_text, file_name="dream_analysis.txt")
-         else:
-            st.warning("အိပ်မက်ကို ရေးပေးပါ ခင်ဗျာ။")
+        else:
+			st.warning("အိပ်မက်ကို ရေးပေးပါ ခင်ဗျာ။")
 
 # --- Tab 2: Daily Horoscope ---
 with tab2:
