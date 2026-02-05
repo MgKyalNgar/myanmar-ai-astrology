@@ -200,21 +200,21 @@ with tab3:
         else:
             st.warning("အမည် ထည့်ပေးပါ ခင်ဗျာ။")
 
-# --- Viewer Counter (Shields.io Alternative) ---
+# --- Viewer Counter Fix ---
 st.divider()
 
-# သင့် App Link ကို ပြန်ထည့်ထားပါတယ်
-app_url = "https://myammar-ai-astrology-by-kyalngar.streamlit.app"
+# URL ကို အမှားအယွင်းမရှိအောင် သေချာသတ်မှတ်ခြင်း
+actual_app_url = "https://myammar-ai-astrology-by-kyalngar.streamlit.app"
 
-# Shields.io သုံးပြီး Badge ဆောက်ခြင်း
-# ဒါက hits.seeyoufarm ထက် ပိုပြီး Error ကင်းပါတယ်
+# hits.seeyoufarm ကို သုံးပြီး Dynamic Counter ပြုလုပ်ခြင်း
+# URL ကို Percent-encoding လုပ်ထားပါသည်
 counter_html = f"""
 <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 20px;">
     <div style="color: #D4AF37; font-size: 0.85rem; font-weight: bold;">
         Developed with ❤️ by Mg Kyal Ngar | Astrology AI v3.0
     </div>
     <div>
-        <img src="https://img.shields.io/badge/Visitors-View-gold?style=flat-square&logo=appveyor" alt="Counter"/>
+        <img src="https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fmyammar-ai-astrology-by-kyalngar.streamlit.app&count_bg=%23D4AF37&title_bg=%23555555&icon=&icon_color=%23E7E7E7&title=Visitors&edge_flat=false" alt="Hits"/>
     </div>
 </div>
 """
