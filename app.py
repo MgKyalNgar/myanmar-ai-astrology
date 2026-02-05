@@ -138,7 +138,6 @@ tab1, tab2, tab3 = st.tabs(["🌙 အိပ်မက်အဘိဓာန်", "
 def get_ai_response(prompt, spinner_text):
     loading_placeholder = st.empty()
     try:
-        # spinner_text ကို ဒီနေရာမှာ ပြန်သုံးထားပါတယ်
         with st.spinner(spinner_text):
             response = model.generate_content(prompt)
             res_text = response.text
@@ -147,8 +146,8 @@ def get_ai_response(prompt, spinner_text):
         loading_placeholder.empty()
         if "429" in str(e):
             st.error("Gemini Free Limit ပြည့်သွားပါပြီ။ ခဏနားပြီးမှ ပြန်စမ်းပေးပါ")
-        else: 
-			st.error(f"Error တက်သွားပါတယ်: {str(e)}")
+        else:
+            st.error(f"Error တက်သွားပါတယ်: {str(e)}")
         return None
 
 
