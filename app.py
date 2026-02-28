@@ -161,7 +161,7 @@ st.markdown(f"""
 
 st.markdown("<h1>🔮 မြန်မာ့ဗေဒင်နှင့် ဓာတ်ရိုက်ဓာတ်ဆင် AI</h1>", unsafe_allow_html=True)
 
-tab1, tab2, tab3, tab4 = st.tabs(["🌙 အိပ်မက်", "✨ ဟောစာတမ်း", "🛡️ ယတြာ", "📜 မဟာဘုတ်"])
+tab1, tab2, tab3, tab4, tab5 = st.tabs(["🌙 အိပ်မက်", "✨ ဟောစာတမ်း", "🛡️ ယတြာ", "📜 မဟာဘုတ်", "💞 အိမ်ထောင်ဖက်"])
 
 # --- Helper Function for AI ---
 def get_ai_response(prompt, spinner_text="သင့်အတွက် တွက်ချက်နေပါသည်..."):
@@ -281,6 +281,40 @@ with tab4:
     if 'mahabote_res' in st.session_state and st.session_state['mahabote_res']:
         st.markdown(f"<div class='result-card'>{st.session_state['mahabote_res']}</div>", unsafe_allow_html=True)
         st.download_button("📁 ဇာတာကိုသိမ်းမယ်", st.session_state['mahabote_res'], file_name="mahabote_astrology.txt")
+
+# --- Tab 5: Compatibility (အိမ်ထောင်ဖက် ရွေးချယ်မှု) ---
+with tab5:
+    st.markdown("<p style='color: #D4AF37; font-size: 1.1rem; font-weight: bold;'>နှစ်ဦးသား လိုက်ဖက်ညီမှု စစ်ဆေးရန်</p>", unsafe_allow_html=True)
+    
+    col1, col2 = st.columns(2)
+    
+    with col1:
+        st.subheader("မိမိအချက်အလက်")
+        u_name_comp = st.text_input("သင့်အမည်", key="u_comp")
+        u_day_comp = st.selectbox("သင့်နေ့နံ", ["တနင်္ဂနွေ", "တနင်္လာ", "အင်္ဂါ", "ဗုဒ္ဓဟူး", "ရာဟု", "ကြာသပတေး", "သောကြာ", "စနေ"], key="u_day_comp")
+        
+    with col2:
+        st.subheader("လက်တွဲဖော်")
+        p_name_comp = st.text_input("လက်တွဲဖော်အမည်", key="p_comp")
+        p_day_comp = st.selectbox("လက်တွဲဖော်နေ့နံ", ["တနင်္ဂနွေ", "တနင်္လာ", "အင်္ဂါ", "ဗုဒ္ဓဟူး", "ရာဟု", "ကြာသပတေး", "သောကြာ", "စနေ"], key="p_day_comp")
+
+    if st.button("တွဲဖက်မှု စစ်ဆေးမယ် 💞"):
+        if u_name_comp and p_name_comp:
+            full_prompt = prompts.COMPATIBILITY_TEMPLATE.format(
+                system_instruction=prompts.SYSTEM_INSTRUCTION,
+                user_name=u_name_comp,
+                user_day=u_day_comp,
+                partner_name=p_name_comp,
+                partner_day=p_day_comp
+            )
+            st.session_state['comp_res'] = get_ai_response(full_prompt, spinner_text="နှစ်ဦးသား လိုက်ဖက်မှုကို တွက်ချက်နေပါသည်...")
+        else:
+            st.warning("အမည်နှစ်ခုလုံးကို ပြည့်စုံအောင် ဖြည့်ပေးပါ ခင်ဗျာ။")
+
+    # ရလဒ်ပြသခြင်း
+    if 'comp_res' in st.session_state and st.session_state['comp_res']:
+        st.markdown(f"<div class='result-card'>{st.session_state['comp_res']}</div>", unsafe_allow_html=True)
+        st.download_button("📁 ရလဒ်ကိုသိမ်းမယ်", st.session_state['comp_res'], file_name="compatibility_result.txt")
 
         
 # --- Viewer Counter & Facebook Share Section ---
