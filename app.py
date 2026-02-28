@@ -83,17 +83,22 @@ st.markdown("""
     	text-shadow: 1px 1px 2px black; /* စာလုံးပိုကြွလာအောင် */
 	}
 
-    /* Result Card Styling */
     .result-card {
         background-color: rgba(26, 28, 35, 0.95); 
-        padding: 25px; 
+        padding: 18px
         border-radius: 15px;
         border: 1px solid #D4AF37; 
         color: #F0F0F0; 
-        line-height: 1.6;
-        margin-top: 15px;
-        white-space: pre-wrap;
+        line-height: 1.4;
+        margin-top: 10px;          
+        white-space: pre-line;     
+        font-size: 1.05rem;        
     }
+
+    .result-card p {
+        margin-bottom: 8px !important; 
+    }
+
 
     h1 { color: #D4AF37 !important; text-align: center; font-size: 2em !important; text-shadow: 2px 2px 4px #000; }
 
