@@ -85,7 +85,7 @@ st.markdown("""
 
     .result-card {
         background-color: rgba(26, 28, 35, 0.95); 
-        padding: 18px
+        padding: 18px;
         border-radius: 15px;
         border: 1px solid #D4AF37; 
         color: #F0F0F0; 
