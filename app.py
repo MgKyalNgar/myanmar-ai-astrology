@@ -161,7 +161,7 @@ st.markdown(f"""
 
 st.markdown("<h1>🔮 မြန်မာ့ဗေဒင်နှင့် ဓာတ်ရိုက်ဓာတ်ဆင် AI</h1>", unsafe_allow_html=True)
 
-tab1, tab2, tab3 = st.tabs(["🌙 အိပ်မက်အဘိဓာန်", "✨ နေ့စဉ်ဟောစာတမ်း", "🛡️ ယတြာတောင်းရန်"])
+tab1, tab2, tab3, tab4 = st.tabs(["🌙 အိပ်မက်", "✨ ဟောစာတမ်း", "🛡️ ယတြာ", "📜 မဟာဘုတ်"])
 
 # --- Helper Function for AI ---
 def get_ai_response(prompt, spinner_text="သင့်အတွက် တွက်ချက်နေပါသည်..."):
@@ -258,6 +258,30 @@ with tab3:
     if 'yadaya_res' in st.session_state and st.session_state['yadaya_res']:
         st.markdown(f"<div class='result-card'>{st.session_state['yadaya_res']}</div>", unsafe_allow_html=True)
         st.download_button("📁 ယတြာကိုသိမ်းမယ်", st.session_state['yadaya_res'], file_name="yadaya.txt")
+
+# --- Tab 4: Mahabote (မဟာဘုတ် ဇာတာခွင်) ---
+with tab4:
+    st.markdown("<p style='color: #D4AF37; font-size: 1.1rem; font-weight: bold;'>သင့်မွေးသက္ကရာဇ်ကို ထည့်သွင်းပါ</p>", unsafe_allow_html=True)
+    
+    # Date Picker ထည့်ခြင်း
+    dob = st.date_input("မွေးသက္ကရာဇ် (ခရစ်နှစ်)", min_value=datetime.date(1920, 1, 1), max_value=datetime.date.today())
+    
+    # နေ့နံ ရွေးချယ်ခြင်း (Tab 2 နဲ့ key မတူအောင် key="maha_day" ပေးထားသည်)
+    birth_day = st.selectbox("မွေးဖွားရာ နေ့နံ", ["တနင်္ဂနွေ", "တနင်္လာ", "အင်္ဂါ", "ဗုဒ္ဓဟူး", "ရာဟု", "ကြာသပတေး", "သောကြာ", "စနေ"], key="maha_day")
+    
+    if st.button("ဇာတာတွက်မယ် 📜"):
+        full_prompt = prompts.MAHABOTE_TEMPLATE.format(
+            system_instruction=prompts.SYSTEM_INSTRUCTION,
+            dob=dob.strftime("%Y-%m-%d"),
+            day=birth_day
+        )
+        st.session_state['mahabote_res'] = get_ai_response(full_prompt, spinner_text="မဟာဘုတ်ခွင် တွက်ချက်နေပါသည်...")
+
+    # ရလဒ်ပြသခြင်း
+    if 'mahabote_res' in st.session_state and st.session_state['mahabote_res']:
+        st.markdown(f"<div class='result-card'>{st.session_state['mahabote_res']}</div>", unsafe_allow_html=True)
+        st.download_button("📁 ဇာတာကိုသိမ်းမယ်", st.session_state['mahabote_res'], file_name="mahabote_astrology.txt")
+
         
 # --- Viewer Counter & Facebook Share Section ---
 # --- Footer Section (Revised Version) ---
