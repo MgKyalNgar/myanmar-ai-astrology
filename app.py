@@ -154,7 +154,7 @@ st.markdown("""
 api_key = os.getenv("GEMINI_API_KEY")
 if api_key:
     genai.configure(api_key=api_key)
-    model = genai.GenerativeModel('models/gemini-2.5-flash')
+    model = genai.GenerativeModel('models/gemini-2.5-pro')
 else:
     st.error("API Key Not Found Error")
 
