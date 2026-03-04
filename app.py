@@ -154,7 +154,12 @@ st.markdown("""
 api_key = os.getenv("GEMINI_API_KEY")
 if api_key:
     genai.configure(api_key=api_key)
-    model = genai.GenerativeModel('models/gemini-2.5-pro')
+    # အသုံးပြုမည့် Model များ (တစ်ခုကုန်လျှင် နောက်တစ်ခုပြောင်းရန်)
+    AVAILABLE_MODELS = [
+        'gemini-2.5-flash', 
+        'gemini-2.0-flash-lite',
+        'gemini-3-flash-preview'
+    ]
 else:
     st.error("API Key Not Found Error")
 
@@ -195,19 +200,31 @@ def clean_ai_text(text):
 
 # --- Helper Function for AI ---
 def get_ai_response(prompt, spinner_text="သင့်အတွက် တွက်ချက်နေပါသည်..."):
-    # loading_placeholder နဲ့ try သည် တစ်တန်းတည်း ဖြစ်ရမည်
     loading_placeholder = st.empty()
-    try:
-        with st.spinner(spinner_text):
-            response = model.generate_content(prompt)
-            final_text = clean_ai_text(response.text) # ဒီမှာ Clean လုပ်လိုက်ပါ
-            return final_text
-    except Exception as e:
-        loading_placeholder.empty()
-        if "429" in str(e):
-            st.error("AI Token Free Limit ပြည့်သွားပါပြီ။ ခဏနားပြီးမှ ပြန်စမ်းပေးပါ")
-        else:
-            st.error(f"Error တက်သွားပါတယ်: {str(e)}")
+    
+    with st.spinner(spinner_text):
+        # ရနိုင်သမျှ Model တစ်ခုချင်းစီကို စမ်းကြည့်ခြင်း
+        for model_name in AVAILABLE_MODELS:
+            try:
+                # လက်ရှိ loop ပတ်နေသော model ကို တည်ဆောက်သည်
+                current_model = genai.GenerativeModel(f'models/{model_name}')
+                response = current_model.generate_content(prompt)
+                
+                # အဖြေရလျှင် Clean လုပ်ပြီး ပြန်ပေးမည်
+                final_text = clean_ai_text(response.text)
+                return final_text
+                
+            except Exception as e:
+                # အကယ်၍ 429 (Token ကုန်) ဖြစ်ပါက နောက် model တစ်ခုကို ထပ်စမ်းမည်
+                if "429" in str(e):
+                    continue # နောက် Model သို့ ကျော်သွားရန်
+                else:
+                    # အခြား Error ဖြစ်လျှင် ရပ်ပြီး အမှားပြမည်
+                    st.error(f"Error ({model_name}): {str(e)}")
+                    return None
+        
+        # Model အားလုံး စမ်းပြီးလို့မှ မရခဲ့ရင်
+        st.error("ရနိုင်သမျှ AI Model အားလုံး Token Limit ပြည့်သွားပါပြီ။ ခဏနားပြီးမှ ပြန်စမ်းပေးပါ။")
         return None
 		
 
