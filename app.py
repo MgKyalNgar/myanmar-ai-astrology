@@ -16,8 +16,9 @@ with st.sidebar:
     # URL အမှန်ကို ချိတ်ဆက်ခြင်း
     # Streamlit Cloud တွင် Page တစ်ခုမှ တစ်ခုသို့ သွားရန် URL နောက်တွင် / ကပ်ပြီး ဖိုင်အမည်ကို ရေးရပါသည်
     cleaner_url = "https://myanmar-ai-astrology-by-kyalngar.streamlit.app/test_cleaner"
-    
     st.link_button("✂️ Open Text Cleaner", cleaner_url, use_container_width=True)
+
+	st.link_button("✂️ Open Text Cleaner2", "/test_cleaner", use_container_width=True)
     
     st.divider()
     st.caption("v3.5 Build - Space Correction Mode")
