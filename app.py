@@ -95,8 +95,35 @@ st.markdown("""
         font-size: 1.05rem;        
     }
 
+    .result-card h3, .result-card h4 {
+        margin-top: 10px !important;
+        margin-bottom: 5px !important;
+        color: #D4AF37 !important;
+        font-weight: bold !important;
+    }
+
+    /* List (အချက်အလက်ပြစာရင်း) များ၏ အကွာအဝေးကို ကျစ်လစ်စေခြင်း */
+    .result-card ul {
+        margin-top: 0px !important;
+        margin-bottom: 10px !important;
+        padding-left: 20px !important;
+    }
+
+    .result-card li {
+        margin-bottom: 5px !important; /* အချက်တစ်ခုချင်းစီကြား အကွာအဝေး */
+        line-height: 1.5 !important;
+    }
+
+    /* Paragraph များ၏ အောက်ခြေ Margin ကို လျှော့ချခြင်း */
     .result-card p {
-        margin-bottom: 8px !important; 
+        margin-bottom: 5px !important; 
+    }
+
+    /* အလျားလိုက်မျဉ်း (hr) ထည့်ထားလျှင် အကွာအဝေးညှိရန် */
+    .result-card hr {
+        margin: 10px 0 !important;
+        border: 0;
+        border-top: 1px solid rgba(212, 175, 55, 0.3);
     }
 
 
