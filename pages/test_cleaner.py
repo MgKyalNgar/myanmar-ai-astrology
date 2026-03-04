@@ -3,23 +3,27 @@ import re
 
 st.set_page_config(page_title="Text Cleaner Tester", layout="wide")
 
-
-
 def clean_spaces(text, mode):
     if mode == "Standard (စာပိုဒ်အလွတ် ၁ ကြောင်းချန်)":
-        # စာကြောင်းအလွတ် ၃ ကြောင်းဆင့်နေရင် ၂ ကြောင်း (စာပိုဒ် ၁ ပိုဒ်စာ) ပဲ ချန်မယ်
-        cleaned_text = re.sub(r'\n{3,}', '\n\n', text).strip()
-        cleaned_text = "\n".join([line.strip() for line in cleaned_text.split("\n")])
-        return cleaned_text
+        # စာကြောင်း ၃ ကြောင်းဆင့်နေရင် ၂ ကြောင်းပဲ ချန်မယ် (စာပိုဒ် ခွဲရုံပဲ)
+        return re.sub(r'\n{3,}', '\n\n', text).strip()
     
     elif mode == "Compact (စာကြောင်းများ ကပ်ပစ်ရန်)":
-        # စာကြောင်းအလွတ်အားလုံးကို ဖြုတ်ပြီး ၁ ကြောင်းချင်းစီ ကပ်ပစ်မယ်
-        return re.sub(r'\n{2,}', '\n', text).strip()
+        # စာကြောင်းအလွတ် (Blank Lines) တွေအားလုံးကို ဖြုတ်ပစ်မယ်
+        # \n\n တွေကို \n တစ်ခုတည်း ဖြစ်အောင် ပြောင်းတာပါ
+        temp = re.sub(r'\n\s*\n', '\n', text)
+        return temp.strip()
     
     elif mode == "Ultimate (Space အားလုံးဖြုတ်ရန်)":
-        # Double space တွေရော၊ စာကြောင်းအလွတ်တွေရော အကုန်ရှင်းမယ်
-        temp = re.sub(r'\n+', '\n', text)
-        return re.sub(r' +', ' ', temp).strip()
+        # ၁။ စာကြောင်းအလွတ်တွေ အကုန်ဖြုတ်မယ်
+        temp = re.sub(r'\n\s*\n', '\n', text)
+        # ၂။ စာကြောင်းတစ်ကြောင်းချင်းစီရဲ့ ရှေ့နဲ့နောက်က space တွေကို ဖြုတ်မယ်
+        lines = [line.strip() for line in temp.split('\n')]
+        temp = '\n'.join(lines)
+        # ၃။ စာသားတွေကြားထဲမှာ space ၂ ခု (သို့) ၂ ခုထက်ပိုပါနေရင် ၁ ခုတည်း ဖြစ်အောင်လုပ်မယ်
+        # ဥပမာ - "မင်္ဂလာ  ပါ" ကို "မင်္ဂလာ ပါ" ဖြစ်အောင် ပြောင်းတာပါ
+        final = re.sub(r' +', ' ', temp)
+        return final.strip()
     
     return text
 
