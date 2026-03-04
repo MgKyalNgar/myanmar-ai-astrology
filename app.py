@@ -15,10 +15,10 @@ with st.sidebar:
     
     # Tester Page က Streamlit Cloud မှာဆိုရင် URL ပြောင်းပေးရပါမယ်
     # အခုက Local မှာ စမ်းဖို့ Link ပုံစံပေးထားပါတယ်
-    st.markdown("[Go to Text Cleaner Tester ✂️](https://share.streamlit.io/your-username/your-repo/main/test_cleaner.py)", unsafe_allow_html=True)
+    #st.markdown("[Go to Text Cleaner Tester ✂️](https://share.streamlit.io/your-username/your-repo/main/test_cleaner.py)", unsafe_allow_html=True)
     
     # သို့မဟုတ် Button အနေနဲ့ သုံးချင်ရင် (ဒါက URL သိမှရပါမယ်)
-    # st.link_button("Open Text Cleaner", "https://your-app-url.com/test_cleaner")
+    st.link_button("Open Text Cleaner", "https://myanmar-ai-astrology-by-kyalngar.streamlit.app/test_cleaner")
 
 # --- PWA Mainframe Logic ---
 # ဤ Code သည် Browser ကို Install လုပ်ရန် (Add to Home Screen) လှုံ့ဆော်ပေးပါလိမ့်မည်
