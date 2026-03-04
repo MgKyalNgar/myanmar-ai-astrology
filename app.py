@@ -8,6 +8,18 @@ import streamlit.components.v1 as components
 # --- Page Config ---
 st.set_page_config(page_title="Myanmar AI Astrology", page_icon="🔮", layout="centered")
 
+# Sidebar တွင် Tester Page သို့သွားရန် Link ပြုလုပ်ခြင်း
+with st.sidebar:
+    st.title("🛠️ Developer Tools")
+    st.info("AI Result ထွက်လာတဲ့အခါ စာကြောင်းတွေ အရမ်းကျဲနေရင် အောက်က Cleaner မှာ စမ်းကြည့်နိုင်ပါတယ်")
+    
+    # Tester Page က Streamlit Cloud မှာဆိုရင် URL ပြောင်းပေးရပါမယ်
+    # အခုက Local မှာ စမ်းဖို့ Link ပုံစံပေးထားပါတယ်
+    st.markdown("[Go to Text Cleaner Tester ✂️](https://share.streamlit.io/your-username/your-repo/main/test_cleaner.py)", unsafe_allow_html=True)
+    
+    # သို့မဟုတ် Button အနေနဲ့ သုံးချင်ရင် (ဒါက URL သိမှရပါမယ်)
+    # st.link_button("Open Text Cleaner", "https://your-app-url.com/test_cleaner")
+
 # --- PWA Mainframe Logic ---
 # ဤ Code သည် Browser ကို Install လုပ်ရန် (Add to Home Screen) လှုံ့ဆော်ပေးပါလိမ့်မည်
 st.markdown(f"""
