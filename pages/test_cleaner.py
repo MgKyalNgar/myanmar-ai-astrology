@@ -8,7 +8,9 @@ st.set_page_config(page_title="Text Cleaner Tester", layout="wide")
 def clean_spaces(text, mode):
     if mode == "Standard (စာပိုဒ်အလွတ် ၁ ကြောင်းချန်)":
         # စာကြောင်းအလွတ် ၃ ကြောင်းဆင့်နေရင် ၂ ကြောင်း (စာပိုဒ် ၁ ပိုဒ်စာ) ပဲ ချန်မယ်
-        return re.sub(r'\n{3,}', '\n\n', text).strip()
+        cleaned_text = re.sub(r'\n{3,}', '\n\n', text).strip()
+        cleaned_text = "\n".join([line.strip() for line in cleaned_text.split("\n")])
+        return cleaned_text
     
     elif mode == "Compact (စာကြောင်းများ ကပ်ပစ်ရန်)":
         # စာကြောင်းအလွတ်အားလုံးကို ဖြုတ်ပြီး ၁ ကြောင်းချင်းစီ ကပ်ပစ်မယ်
