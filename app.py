@@ -179,7 +179,7 @@ def get_ai_response(prompt, spinner_text="သင့်အတွက် တွက�
     try:
         with st.spinner(spinner_text):
             response = model.generate_content(prompt)
-			final_text = clean_ai_text(response.text)
+            final_text = clean_ai_text(response.text) # ဒီမှာ Clean လုပ်လိုက်ပါ
             return final_text
     except Exception as e:
         loading_placeholder.empty()
