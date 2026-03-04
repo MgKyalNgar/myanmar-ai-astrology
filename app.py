@@ -13,12 +13,14 @@ with st.sidebar:
     st.title("🛠️ Developer Tools")
     st.info("AI Result ထွက်လာတဲ့အခါ စာကြောင်းတွေ အရမ်းကျဲနေရင် အောက်က Cleaner မှာ စမ်းကြည့်နိုင်ပါတယ်")
     
-    # Tester Page က Streamlit Cloud မှာဆိုရင် URL ပြောင်းပေးရပါမယ်
-    # အခုက Local မှာ စမ်းဖို့ Link ပုံစံပေးထားပါတယ်
-    #st.markdown("[Go to Text Cleaner Tester ✂️](https://share.streamlit.io/your-username/your-repo/main/test_cleaner.py)", unsafe_allow_html=True)
+    # URL အမှန်ကို ချိတ်ဆက်ခြင်း
+    # Streamlit Cloud တွင် Page တစ်ခုမှ တစ်ခုသို့ သွားရန် URL နောက်တွင် / ကပ်ပြီး ဖိုင်အမည်ကို ရေးရပါသည်
+    cleaner_url = "https://myanmar-ai-astrology-by-kyalngar.streamlit.app/test_cleaner"
     
-    # သို့မဟုတ် Button အနေနဲ့ သုံးချင်ရင် (ဒါက URL သိမှရပါမယ်)
-    st.link_button("Open Text Cleaner", "https://myanmar-ai-astrology-by-kyalngar.streamlit.app/test_cleaner")
+    st.link_button("✂️ Open Text Cleaner", cleaner_url, use_container_width=True)
+    
+    st.divider()
+    st.caption("v3.5 Build - Space Correction Mode")
 
 # --- PWA Mainframe Logic ---
 # ဤ Code သည် Browser ကို Install လုပ်ရန် (Add to Home Screen) လှုံ့ဆော်ပေးပါလိမ့်မည်
