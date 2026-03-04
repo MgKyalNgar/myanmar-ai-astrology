@@ -91,7 +91,7 @@ st.markdown("""
         color: #F0F0F0; 
         line-height: 1.4 !important; /* စာကြောင်း အကွာအဝေး */
         margin-top: 10px;          
-        white-space: pre-line;     
+        white-space: normal;    
         font-size: 1.05rem;        
     }
 
@@ -104,8 +104,8 @@ st.markdown("""
 
     /* List (အချက်အလက်ပြစာရင်း) များ၏ အကွာအဝေးကို ကျစ်လစ်စေခြင်း */
     .result-card ul {
-        margin-top: 0px !important;
-        margin-bottom: 10px !important;
+        margin-top: 20px !important;
+        margin-bottom: 20px !important;
         padding-left: 20px !important;
     }
 
@@ -114,12 +114,7 @@ st.markdown("""
         line-height: 1.5 !important;
     }
 
-    /* Paragraph များ၏ အောက်ခြေ Margin ကို လျှော့ချခြင်း */
-    .result-card p {
-        margin-bottom: 5px !important; 
-    }
-
-    /* အလျားလိုက်မျဉ်း (hr) ထည့်ထားလျှင် အကွာအဝေးညှိရန် */
+        /* အလျားလိုက်မျဉ်း (hr) ထည့်ထားလျှင် အကွာအဝေးညှိရန် */
     .result-card hr {
         margin: 10px 0 !important;
         border: 0;
