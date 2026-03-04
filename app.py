@@ -8,21 +8,6 @@ import streamlit.components.v1 as components
 # --- Page Config ---
 st.set_page_config(page_title="Myanmar AI Astrology", page_icon="🔮", layout="centered")
 
-# Sidebar တွင် Tester Page သို့သွားရန် Link ပြုလုပ်ခြင်း
-with st.sidebar:
-    st.title("🛠️ Developer Tools")
-    st.info("AI Result ထွက်လာတဲ့အခါ စာကြောင်းတွေ အရမ်းကျဲနေရင် အောက်က Cleaner မှာ စမ်းကြည့်နိုင်ပါတယ်")
-    
-    # URL အမှန်ကို ချိတ်ဆက်ခြင်း
-    # Streamlit Cloud တွင် Page တစ်ခုမှ တစ်ခုသို့ သွားရန် URL နောက်တွင် / ကပ်ပြီး ဖိုင်အမည်ကို ရေးရပါသည်
-    cleaner_url = "https://myanmar-ai-astrology-by-kyalngar.streamlit.app/test_cleaner"
-    st.link_button("✂️ Open Text Cleaner", cleaner_url, use_container_width=True)
-
-    st.link_button("✂️ Open Text Cleaner2", "/test_cleaner", use_container_width=True)
-    
-    st.divider()
-    st.caption("v3.5 Build - Space Correction Mode")
-
 # --- PWA Mainframe Logic ---
 # ဤ Code သည် Browser ကို Install လုပ်ရန် (Add to Home Screen) လှုံ့ဆော်ပေးပါလိမ့်မည်
 st.markdown(f"""
