@@ -1,0 +1,9 @@
+# Streamlit theme — အမြဲ Dark mode အရောင်ပဲ သုံးမည် (21 Nov 2026)
+# System Light/Dark ဘာဖြစ်ဖြစ် app က Dark အတိုင်း ပေါ်မည်။
+[theme]
+base = "dark"
+primaryColor = "#D4AF37"
+backgroundColor = "#090A0F"
+secondaryBackgroundColor = "#1A1C23"
+textColor = "#F0F0F0"
+font = "sans serif"
