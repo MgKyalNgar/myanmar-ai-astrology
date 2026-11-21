@@ -167,7 +167,8 @@ if api_key:
     client = genai.Client(
         api_key=api_key,
         # v1beta — gemini-3-flash-preview က v1 မှာ မရှိသေးလို့ (21 Nov 2026 စစ်ပြီး)
-        http_options=types.HttpOptions(api_version="v1beta")
+        # StarFish လို တစ်ခေါက်ကို 60 စက္ကန့် timeout (milliseconds နဲ့ ရေးရသည်)
+        http_options=types.HttpOptions(api_version="v1beta", timeout=60000)
     )
 else:
     st.error("API Key Not Found Error")
