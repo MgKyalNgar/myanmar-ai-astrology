@@ -151,15 +151,17 @@ st.markdown("""
     """, unsafe_allow_html=True)
 
 # --- API Configuration ---
+# အသုံးပြုမည့် Model များ (တစ်ခုကုန်လျှင် နောက်တစ်ခုပြောင်းရန်)
+# 21 Nov 2026 စစ်ပြီး အလုပ်လုပ်ကြောင်း အတည်ပြုထားသော model များသာ
+AVAILABLE_MODELS = [
+    'gemini-3-flash-preview',
+    'gemini-2.5-flash',
+    'gemini-3.5-flash-lite'
+]
+
 api_key = os.getenv("GEMINI_API_KEY")
 if api_key:
     genai.configure(api_key=api_key)
-    # အသုံးပြုမည့် Model များ (တစ်ခုကုန်လျှင် နောက်တစ်ခုပြောင်းရန်)
-    AVAILABLE_MODELS = [
-        'gemini-2.5-flash', 
-        'gemini-2.0-flash-lite',
-        'gemini-3-flash-preview'
-    ]
 else:
     st.error("API Key Not Found Error")
 
@@ -201,7 +203,12 @@ def clean_ai_text(text):
 # --- Helper Function for AI ---
 def get_ai_response(prompt, spinner_text="သင့်အတွက် တွက်ချက်နေပါသည်..."):
     loading_placeholder = st.empty()
-    
+
+    # API Key မရှိလျှင် ချက်ချင်း ရပ်ပါ
+    if not api_key:
+        st.error("API Key Not Found Error")
+        return None
+
     with st.spinner(spinner_text):
         # ရနိုင်သမျှ Model တစ်ခုချင်းစီကို စမ်းကြည့်ခြင်း
         for model_name in AVAILABLE_MODELS:
@@ -209,20 +216,25 @@ def get_ai_response(prompt, spinner_text="သင့်အတွက် တွက�
                 # လက်ရှိ loop ပတ်နေသော model ကို တည်ဆောက်သည်
                 current_model = genai.GenerativeModel(f'models/{model_name}')
                 response = current_model.generate_content(prompt)
-                
+
                 # အဖြေရလျှင် Clean လုပ်ပြီး ပြန်ပေးမည်
                 final_text = clean_ai_text(response.text)
                 return final_text
-                
+
             except Exception as e:
-                # အကယ်၍ 429 (Token ကုန်) ဖြစ်ပါက နောက် model တစ်ခုကို ထပ်စမ်းမည်
-                if "429" in str(e):
-                    continue # နောက် Model သို့ ကျော်သွားရန်
-                else:
-                    # အခြား Error ဖြစ်လျှင် ရပ်ပြီး အမှားပြမည်
-                    st.error(f"Error ({model_name}): {str(e)}")
+                err = str(e)
+                # Key ပြဿနာ (401/403) ဆိုရင် နောက် model စမ်းလည်း အလကားဖြစ်လို့ ချက်ချင်း ရပ်ပါ
+                if "401" in err or "403" in err:
+                    st.error(f"API Key Error ({model_name}): {err}")
                     return None
-        
+                # 429 (Token ကုန်), 404/400 (Model မရှိတော့တာ), 503/504 (Service မရတာ),
+                # Timeout ဖြစ်ပါက နောက် model တစ်ခုကို ထပ်စမ်းမည်
+                if any(code in err for code in ("429", "404", "400", "503", "504")) or "timed out" in err.lower() or "timeout" in err.lower():
+                    continue  # နောက် Model သို့ ကျော်သွားရန်
+                # အခြား Error ဖြစ်လျှင် ရပ်ပြီး အမှားပြမည်
+                st.error(f"Error ({model_name}): {err}")
+                return None
+
         # Model အားလုံး စမ်းပြီးလို့မှ မရခဲ့ရင်
         st.error("ရနိုင်သမျှ AI Model အားလုံး Token Limit ပြည့်သွားပါပြီ။ ခဏနားပြီးမှ ပြန်စမ်းပေးပါ။")
         return None
