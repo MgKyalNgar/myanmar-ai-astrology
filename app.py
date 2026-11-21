@@ -1,5 +1,6 @@
 import streamlit as st
-import google.generativeai as genai
+from google import genai
+from google.genai import types
 import os
 import datetime
 import prompts
@@ -160,8 +161,14 @@ AVAILABLE_MODELS = [
 ]
 
 api_key = os.getenv("GEMINI_API_KEY")
+# New SDK (google-genai): client ကို key ရှိမှသာ ဆောက်မည်
+client = None
 if api_key:
-    genai.configure(api_key=api_key)
+    client = genai.Client(
+        api_key=api_key,
+        # v1beta — gemini-3-flash-preview က v1 မှာ မရှိသေးလို့ (21 Nov 2026 စစ်ပြီး)
+        http_options=types.HttpOptions(api_version="v1beta")
+    )
 else:
     st.error("API Key Not Found Error")
 
@@ -217,8 +224,10 @@ def get_ai_response(prompt, spinner_text="သင့်အတွက် တွက�
         for model_name in AVAILABLE_MODELS:
             try:
                 # လက်ရှိ loop ပတ်နေသော model ကို တည်ဆောက်သည်
-                current_model = genai.GenerativeModel(f'models/{model_name}')
-                response = current_model.generate_content(prompt)
+                response = client.models.generate_content(
+                    model=f'models/{model_name}',
+                    contents=prompt
+                )
 
                 # အဖြေရလျှင် Clean လုပ်ပြီး ပြန်ပေးမည်
                 final_text = clean_ai_text(response.text)
@@ -226,13 +235,15 @@ def get_ai_response(prompt, spinner_text="သင့်အတွက် တွက�
 
             except Exception as e:
                 err = str(e)
+                # New SDK က error code ကို .code attribute အဖြစ်ပါ ပေးသည်
+                code = getattr(e, "code", None)
                 # Key ပြဿနာ (401/403) ဆိုရင် နောက် model စမ်းလည်း အလကားဖြစ်လို့ ချက်ချင်း ရပ်ပါ
-                if "401" in err or "403" in err:
+                if code in (401, 403) or "401" in err or "403" in err:
                     st.error(f"API Key Error ({model_name}): {err}")
                     return None
                 # 429 (Token ကုန်), 404/400 (Model မရှိတော့တာ), 503/504 (Service မရတာ),
                 # Timeout ဖြစ်ပါက နောက် model တစ်ခုကို ထပ်စမ်းမည်
-                if any(code in err for code in ("429", "404", "400", "503", "504")) or "timed out" in err.lower() or "timeout" in err.lower():
+                if code in (429, 404, 400, 503, 504) or any(c in err for c in ("429", "404", "400", "503", "504")) or "timed out" in err.lower() or "timeout" in err.lower():
                     continue  # နောက် Model သို့ ကျော်သွားရန်
                 # အခြား Error ဖြစ်လျှင် ရပ်ပြီး အမှားပြမည်
                 st.error(f"Error ({model_name}): {err}")
