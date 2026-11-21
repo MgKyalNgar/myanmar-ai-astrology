@@ -166,7 +166,10 @@ else:
     st.error("API Key Not Found Error")
 
 # --- Lucky Color Logic ---
-now = datetime.datetime.now()
+# မြန်မာစံတော်ချိန် (UTC+6:30) — Streamlit server က UTC သုံးလို့
+MYANMAR_TZ = datetime.timezone(datetime.timedelta(hours=6, minutes=30))
+now = datetime.datetime.now(MYANMAR_TZ)
+today_myanmar = now.date()
 day_name = now.strftime("%A") # ဥပမာ - Wednesday
 
 lucky_data = {
@@ -348,7 +351,8 @@ with tab4:
     if st.button("ဟောစာတမ်းကြည့်မယ် ✨"):
         full_prompt = prompts.HOROSCOPE_TEMPLATE.format(
             system_instruction=prompts.SYSTEM_INSTRUCTION,
-            day=day
+            day=day,
+            today=today_myanmar.strftime("%d %B %Y")
         )
         st.session_state['horo_res'] = get_ai_response(full_prompt)
             
@@ -361,16 +365,30 @@ with tab5:
     st.markdown("<p style='color: #D4AF37; font-size: 1.1rem; font-weight: bold;'>သင့်မွေးသက္ကရာဇ်ကို ထည့်သွင်းပါ</p>", unsafe_allow_html=True)
     
     # Date Picker ထည့်ခြင်း
-    dob = st.date_input("မွေးသက္ကရာဇ် (ခရစ်နှစ်)", min_value=datetime.date(1920, 1, 1), max_value=datetime.date.today())
+    dob = st.date_input("မွေးသက္ကရာဇ် (ခရစ်နှစ်)", value=today_myanmar, min_value=datetime.date(1920, 1, 1), max_value=today_myanmar)
     
     # နေ့နံ ရွေးချယ်ခြင်း (Tab 2 နဲ့ key မတူအောင် key="maha_day" ပေးထားသည်)
     birth_day = st.selectbox("မွေးဖွားရာ နေ့နံ", ["တနင်္ဂနွေ", "တနင်္လာ", "အင်္ဂါ", "ဗုဒ္ဓဟူး", "ရာဟု", "ကြာသပတေး", "သောကြာ", "စနေ"], key="maha_day")
     
     if st.button("ဇာတာတွက်မယ် 📜"):
+        # မဟာဘုတ် အကြွင်းနှင့် အနေအထားကို code ထဲမှာ တွက်မည် (AI ကို တွက်ခိုင်းတော့မည် မဟုတ်ပါ)
+        remainder = (dob.year - 638) % 7
+        weekdays = ["တနင်္ဂနွေ", "တနင်္လာ", "အင်္ဂါ", "ဗုဒ္ဓဟူး", "ကြာသပတေး", "သောကြာ", "စနေ"]
+        row0 = ["ပုတိ", "သိုက်", "မရဏ", "အဓိပတိ", "ရာဇ", "အထွန်း", "ဘင်္ဂ"]
+        # ရာဟု သည် ဗုဒ္ဓဟူး နေ့လယ်ပိုင်း ဖြစ်လို့ ဇယားမှာ ဗုဒ္ဓဟူး ကော်လံပဲ သုံးမည်
+        lookup_day = "ဗုဒ္ဓဟူး" if birth_day == "ရာဟု" else birth_day
+        position = row0[(weekdays.index(lookup_day) - remainder) % 7]
+        # ရွေးထားသော နေ့နံက မွေးနေ့နှင့် မကိုက်လျှင် သတိပေးမည် (ရွေးချယ်မှုကတော့ user အတိုင်း ဆက်သွားမည်)
+        en_to_mm = {"Monday": "တနင်္လာ", "Tuesday": "အင်္ဂါ", "Wednesday": "ဗုဒ္ဓဟူး", "Thursday": "ကြာသပတေး", "Friday": "သောကြာ", "Saturday": "စနေ", "Sunday": "တနင်္ဂနွေ"}
+        derived_day = en_to_mm[dob.strftime("%A")]
+        if birth_day != derived_day and not (derived_day == "ဗုဒ္ဓဟူး" and birth_day == "ရာဟု"):
+            st.warning(f"သတိပြုပါ — ရွေးထားသော နေ့နံ ({birth_day}) က မွေးသက္ကရာဇ်နှင့် မကိုက်ပါ။ {dob.strftime('%d %B %Y')} ရက်နေ့၏ နေ့နံမှာ {derived_day} ဖြစ်ပါသည်။")
         full_prompt = prompts.MAHABOTE_TEMPLATE.format(
             system_instruction=prompts.SYSTEM_INSTRUCTION,
             dob=dob.strftime("%Y-%m-%d"),
-            day=birth_day
+            day=birth_day,
+            remainder=remainder,
+            position=position
         )
         st.session_state['mahabote_res'] = get_ai_response(full_prompt, spinner_text="မဟာဘုတ်ခွင် တွက်ချက်နေပါသည်...")
 
